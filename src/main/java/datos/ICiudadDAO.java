@@ -8,4 +8,8 @@ public interface ICiudadDAO {
 
     public List<CiudadDTO> verCiudades();
 
+    public void insertarCiudad();
+
+    public void borrarCiudad();
+
 }

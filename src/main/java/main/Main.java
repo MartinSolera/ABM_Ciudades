@@ -4,9 +4,12 @@ import datos.CiudadDAOImplementss;
 import domain.CiudadDTO;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
         CiudadDAOImplementss ciudadDAO = new CiudadDAOImplementss();
 
         ///AGREGAR CIUDAD
@@ -14,29 +17,19 @@ public class Main {
 
         ///VER LISTA CIUDADAES
         List<CiudadDTO> listaCiudades = ciudadDAO.verCiudades();
-        mostarCiudades(listaCiudades);
+        ciudadDAO.mostarCiudades(listaCiudades);
 
+        ///BORRAR CIUDAD
+        System.out.println("BORRANDO CIUDAD");
+        ciudadDAO.borrarCiudad();
+
+        ///VER LISTA CIUDADAES
+        List<CiudadDTO> nuevaLista = ciudadDAO.verCiudades();
+        ciudadDAO.mostarCiudades(nuevaLista);
 
     }
 
-    public static void mostarCiudades(List<CiudadDTO> listaCiudades){
-        int i = 0;
-        for(CiudadDTO ciudad : listaCiudades){
-            i++;
-            System.out.println("Ciudad Nro: " + i);
-            mostrarCiudad(ciudad);
-        }
-    }
 
-    public static void mostrarCiudad(CiudadDTO ciudad){
-        System.out.println("ID: " + ciudad.getId_ciudad());
-        System.out.println("Nombre Ciudad: " + ciudad.getNombre());
-        System.out.println("Pais: " + ciudad.getPais());
-        System.out.println("Año Visitada: " + ciudad.getAnio_visitada());
-        System.out.println("Año Visitada: " + ciudad.getVeces_visitada());
-        System.out.println("La visitaste con: " + ciudad.getCompas());
-        System.out.println("----------------");
-    }
 
 
 }
