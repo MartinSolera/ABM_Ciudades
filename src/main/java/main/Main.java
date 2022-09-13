@@ -21,7 +21,8 @@ public class Main {
             System.out.println("1 - Listar Ciudades");
             System.out.println("2 - Cargar Ciudad");
             System.out.println("3 - Borrar Ciudad");
-            System.out.println("4 - Salir");
+            System.out.println("4 - Modificar");
+            System.out.println("5 - Salir");
 
             try{
 
@@ -38,6 +39,14 @@ public class Main {
                     ciudadDAO.borrarCiudad();
                     break;
                 case 4:
+                    int idCiudad = ciudadDAO.buscarPorNombreIDciudad();
+                    if(idCiudad != 0){
+                        CiudadDTO nuevaCiudad = ciudadDAO.crearCiudad();
+                        ciudadDAO.update(nuevaCiudad,idCiudad);
+                    }
+                    break;
+
+                case 5:
                     salir = true;
                     break;
             }
@@ -51,22 +60,7 @@ public class Main {
 
 
 
-/*
-        ///AGREGAR CIUDAD
-        ciudadDAO.insertarCiudad();
 
-        ///VER LISTA CIUDADAES
-        List<CiudadDTO> listaCiudades = ciudadDAO.verCiudades();
-        ciudadDAO.mostarCiudades(listaCiudades);
-
-        ///BORRAR CIUDAD
-        System.out.println("BORRANDO CIUDAD");
-        ciudadDAO.borrarCiudad();
-
-        ///VER LISTA CIUDADAES
-        List<CiudadDTO> nuevaLista = ciudadDAO.verCiudades();
-        ciudadDAO.mostarCiudades(nuevaLista);
-*/
     }
 
 

@@ -2,6 +2,7 @@ package datos;
 
 import domain.CiudadDTO;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,12 +15,18 @@ public class CiudadDAOImplementss implements ICiudadDAO {
 
     Scanner sc = new Scanner(System.in);
     boolean ciudadEncontrada = false;
+
+    ArrayList<CiudadDTO> listaCiudades = recorrerYcopiar();
+
+    ///SELECCIONAR
     private static final String SQL_SELECT = "SELECT * FROM ciudades.ciudad;";
     ///ALTA
     private static final String SQL_INSERT = "INSERT INTO ciudades.ciudad(nombre,pais, anio_visitada, veces_visitada, compas) VALUES (?,?,?,?,?)";
     ///BAJA
     private static final String SQL_DELETE = "DELETE FROM ciudades.ciudad WHERE nombre = ?";
     ///MODIFICACION
+    private static final String SQL_UPDATE = "UPDATE ciudades.ciudad SET nombre = ?, pais = ?, anio_visitada = ?,veces_visitada = ?, compas = ? WHERE id_ciudad = ?";
+
 
 
     ///-------------------------------------------------------------------------------
@@ -97,6 +104,7 @@ public class CiudadDAOImplementss implements ICiudadDAO {
         }
     }
 
+    @Override
     public CiudadDTO crearCiudad(){
         CiudadDTO ciudad = new CiudadDTO();
 
@@ -118,6 +126,7 @@ public class CiudadDAOImplementss implements ICiudadDAO {
         return ciudad;
     }
 
+    @Override
     public ArrayList<CiudadDTO> recorrerYcopiar(){
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -156,25 +165,7 @@ public class CiudadDAOImplementss implements ICiudadDAO {
 
     }
 
-    public void mostarCiudades(List<CiudadDTO> listaCiudades){
-        int i = 0;
-        for(CiudadDTO ciudad : listaCiudades){
-            i++;
-            System.out.println("Ciudad Nro: " + i);
-            mostrarCiudad(ciudad);
-        }
-    }
-
-    public void mostrarCiudad(CiudadDTO ciudad){
-        System.out.println("ID: " + ciudad.getId_ciudad());
-        System.out.println("Nombre Ciudad: " + ciudad.getNombre());
-        System.out.println("Pais: " + ciudad.getPais());
-        System.out.println("Año Visitada: " + ciudad.getAnio_visitada());
-        System.out.println("Año Visitada: " + ciudad.getVeces_visitada());
-        System.out.println("La visitaste con: " + ciudad.getCompas());
-        System.out.println("----------------");
-    }
-
+    @Override
     public void borrarCiudad(){
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -202,8 +193,8 @@ public class CiudadDAOImplementss implements ICiudadDAO {
         }
     }
 
+    @Override
     public String buscarCiudad(){
-        ArrayList<CiudadDTO> listaCiudades = recorrerYcopiar();
 
         System.out.println("Ingrese la ciudad que quiere buscar: ");
         String ciudadBuscada = sc.next();
@@ -219,6 +210,80 @@ public class CiudadDAOImplementss implements ICiudadDAO {
         }
 
         return ciudadBuscada;
+    }
+
+    public void mostarCiudades(List<CiudadDTO> listaCiudades){
+        int i = 0;
+        for(CiudadDTO ciudad : listaCiudades){
+            i++;
+            System.out.println("Ciudad Nro: " + i);
+            mostrarCiudad(ciudad);
+        }
+    }
+
+    public void mostrarCiudad(CiudadDTO ciudad){
+        System.out.println("ID: " + ciudad.getId_ciudad());
+        System.out.println("Nombre Ciudad: " + ciudad.getNombre());
+        System.out.println("Pais: " + ciudad.getPais());
+        System.out.println("Año Visitada: " + ciudad.getAnio_visitada());
+        System.out.println("Año Visitada: " + ciudad.getVeces_visitada());
+        System.out.println("La visitaste con: " + ciudad.getCompas());
+        System.out.println("----------------");
+    }
+
+    public int buscarPorNombreIDciudad(){
+        System.out.println("Ingrese el nombre de la ciudad que quiere modificar");
+        String ciudadBuscada = sc.next();
+        int idCiudad = 0;
+
+
+
+        for(int i=0; i<listaCiudades.size(); i++){
+            if(listaCiudades.get(i).getNombre().equals(ciudadBuscada)){
+                ciudadEncontrada = true;
+                idCiudad = listaCiudades.get(i).getId_ciudad();
+            }
+        }
+
+        if(ciudadEncontrada == false){
+            System.out.println("La ciudad " + ciudadBuscada + " NO se encuentra");
+        }
+
+        return idCiudad;
+    }
+
+
+
+    public void update (CiudadDTO ciudad, int id ){
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet ts = null;
+        int registro = 0;
+
+
+        try {
+            conn = Conexion.getConnection();
+            stmt = conn.prepareStatement(SQL_UPDATE);
+            stmt.setString(1, ciudad.getNombre());
+            stmt.setString(2, ciudad.getPais());
+            stmt.setInt(3, ciudad.getAnio_visitada());
+            stmt.setInt(4, ciudad.getVeces_visitada());
+            stmt.setString(5,ciudad.getCompas());
+            stmt.setInt(6,id);
+            registro = stmt.executeUpdate();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                Conexion.close(stmt);
+                Conexion.close(conn);
+            } catch (SQLException e) {
+                e.printStackTrace(System.out);
+            }
+        }
     }
 
 

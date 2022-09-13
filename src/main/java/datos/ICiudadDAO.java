@@ -2,14 +2,22 @@ package datos;
 
 import domain.CiudadDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ICiudadDAO {
 
-    public List<CiudadDTO> verCiudades();
+     List<CiudadDTO> verCiudades();
 
-    public void insertarCiudad();
+     void insertarCiudad();
 
-    public void borrarCiudad();
+     void borrarCiudad();
+
+     String buscarCiudad();
+
+    CiudadDTO crearCiudad();
+
+    ArrayList<CiudadDTO> recorrerYcopiar();
+
 
 }
