@@ -2,11 +2,8 @@ package datos;
 
 import domain.CiudadDTO;
 
-import javax.xml.transform.Result;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -16,18 +13,21 @@ public class CiudadDAOImplementss implements ICiudadDAO {
     Scanner sc = new Scanner(System.in);
     boolean ciudadEncontrada = false;
 
+    LocalDate current_date = LocalDate.now();
+    int currentYear = current_date.getYear();
+
     ArrayList<CiudadDTO> listaCiudades = recorrerYcopiar();
 
     ///SELECCIONAR
     private static final String SQL_SELECT = "SELECT * FROM ciudades.ciudad;";
-    ///ALTA
+    ///Alta
     private static final String SQL_INSERT = "INSERT INTO ciudades.ciudad(nombre,pais, anio_visitada, veces_visitada, compas) VALUES (?,?,?,?,?)";
-    ///BAJA
+    ///Baja
     private static final String SQL_DELETE = "DELETE FROM ciudades.ciudad WHERE nombre = ?";
-    ///MODIFICACION
+    ///Modificacion
     private static final String SQL_UPDATE = "UPDATE ciudades.ciudad SET nombre = ?, pais = ?, anio_visitada = ?,veces_visitada = ?, compas = ? WHERE id_ciudad = ?";
-
-
+    ///Ciudad que visite en x año
+    private static final String SQL_SEARCHBYYEAR = "SELECT * FROM ciudades.ciudad WHERE anio_visitada = 2018;";
 
     ///-------------------------------------------------------------------------------
     ///-------------------------------------------------------------------------------
@@ -212,25 +212,7 @@ public class CiudadDAOImplementss implements ICiudadDAO {
         return ciudadBuscada;
     }
 
-    public void mostarCiudades(List<CiudadDTO> listaCiudades){
-        int i = 0;
-        for(CiudadDTO ciudad : listaCiudades){
-            i++;
-            System.out.println("Ciudad Nro: " + i);
-            mostrarCiudad(ciudad);
-        }
-    }
-
-    public void mostrarCiudad(CiudadDTO ciudad){
-        System.out.println("ID: " + ciudad.getId_ciudad());
-        System.out.println("Nombre Ciudad: " + ciudad.getNombre());
-        System.out.println("Pais: " + ciudad.getPais());
-        System.out.println("Año Visitada: " + ciudad.getAnio_visitada());
-        System.out.println("Año Visitada: " + ciudad.getVeces_visitada());
-        System.out.println("La visitaste con: " + ciudad.getCompas());
-        System.out.println("----------------");
-    }
-
+    @Override
     public int buscarPorNombreIDciudad(){
         System.out.println("Ingrese el nombre de la ciudad que quiere modificar");
         String ciudadBuscada = sc.next();
@@ -252,8 +234,7 @@ public class CiudadDAOImplementss implements ICiudadDAO {
         return idCiudad;
     }
 
-
-
+    @Override
     public void update (CiudadDTO ciudad, int id ){
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -285,6 +266,65 @@ public class CiudadDAOImplementss implements ICiudadDAO {
             }
         }
     }
+
+    @Override
+    public CiudadDTO buscarCiudadPorNombre(){
+        System.out.println("Ingrese la ciudad que quiere buscar");
+        String ciudadBuscada = sc.next();
+        CiudadDTO ciudadEncontrada = new CiudadDTO();
+        if(ciudadBuscada != null){
+            for(int i=0; i<listaCiudades.size(); i++){
+                if(listaCiudades.get(i).getNombre().equals(ciudadBuscada)){
+                    ciudadEncontrada = listaCiudades.get(i);
+                }
+            }
+        }
+        return ciudadEncontrada;
+    }
+
+    public ArrayList<CiudadDTO> buscarCiudadPorAnio(){
+        System.out.println("Ingrese el Año que quiere buscar: ");
+        int anioDeBusqueda = sc.nextInt();
+        ArrayList<CiudadDTO> listaCiudadesAnio = new ArrayList<>();
+
+        if(anioDeBusqueda > 2000 && anioDeBusqueda < currentYear){
+            for(int i=0; i<listaCiudades.size();i++){
+                if(listaCiudades.get(i).getAnio_visitada() == anioDeBusqueda){
+                    listaCiudadesAnio.add(listaCiudades.get(i));
+                }
+            }
+        }
+        else{
+            System.out.println("La fecha ingresada no es valida");
+        }
+    return listaCiudadesAnio;
+    }
+
+
+    public void mostarCiudades(List<CiudadDTO> listaCiudades){
+        int i = 0;
+        for(CiudadDTO ciudad : listaCiudades){
+            i++;
+            System.out.println("Ciudad Nro: " + i);
+            mostrarCiudad(ciudad);
+        }
+    }
+
+    public void mostrarCiudad(CiudadDTO ciudad){
+        System.out.println("ID: " + ciudad.getId_ciudad());
+        System.out.println("Nombre Ciudad: " + ciudad.getNombre());
+        System.out.println("Pais: " + ciudad.getPais());
+        System.out.println("Año Visitada: " + ciudad.getAnio_visitada());
+        System.out.println("Año Visitada: " + ciudad.getVeces_visitada());
+        System.out.println("La visitaste con: " + ciudad.getCompas());
+        System.out.println("----------------");
+    }
+
+
+
+
+
+
 
 
 

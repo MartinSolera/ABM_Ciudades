@@ -3,6 +3,7 @@ package main;
 import datos.CiudadDAOImplementss;
 import domain.CiudadDTO;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -22,7 +23,9 @@ public class Main {
             System.out.println("2 - Cargar Ciudad");
             System.out.println("3 - Borrar Ciudad");
             System.out.println("4 - Modificar");
-            System.out.println("5 - Salir");
+            System.out.println("5 - Buscar datos Ciudad");
+            System.out.println("6 - Buscar ciudad por Año");
+            System.out.println("7 - Salir");
 
             try{
 
@@ -45,13 +48,25 @@ public class Main {
                         ciudadDAO.update(nuevaCiudad,idCiudad);
                     }
                     break;
-
                 case 5:
+                    CiudadDTO ciudadBuscada = ciudadDAO.buscarCiudadPorNombre();
+                    ciudadDAO.mostrarCiudad(ciudadBuscada);
+
+                    break;
+                case 6:
+                    ArrayList<CiudadDTO> listaCiudadAnio = ciudadDAO.buscarCiudadPorAnio();
+                    ciudadDAO.mostarCiudades(listaCiudadAnio);
+                    if(listaCiudadAnio.isEmpty()){
+                        System.out.println("No visito ningun pais ese año");
+                    }
+
+
+                case 7:
                     salir = true;
                     break;
             }
             } catch (InputMismatchException e){
-                System.out.println("Debes introducir un numero entre 1-4");
+                System.out.println("Debes introducir un numero entre 1-5");
                 sc.next();
             }
         }

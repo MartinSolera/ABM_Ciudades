@@ -11,6 +11,14 @@ public class CiudadDTO {
     public CiudadDTO() {
     }
 
+    public CiudadDTO(String nombre, String pais, int anio_visitada, int veces_visitada, String compas) {
+        this.nombre = nombre;
+        this.pais = pais;
+        this.anio_visitada = anio_visitada;
+        this.veces_visitada = veces_visitada;
+        this.compas = compas;
+    }
+
     public CiudadDTO(int id_ciudad, String nombre, String pais, int anio_visitada, int veces_visitada, String compas) {
         this.id_ciudad = id_ciudad;
         this.nombre = nombre;

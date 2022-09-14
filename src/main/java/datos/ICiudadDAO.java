@@ -19,5 +19,9 @@ public interface ICiudadDAO {
 
     ArrayList<CiudadDTO> recorrerYcopiar();
 
+    int buscarPorNombreIDciudad();
 
+    void update (CiudadDTO ciudad, int id );
+
+    CiudadDTO buscarCiudadPorNombre();
 }
